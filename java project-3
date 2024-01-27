@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Expense Tracker</title>
+</head>
+<body>
+
+  <h1>Expense Tracker</h1>
+
+  <!-- User Registration Form -->
+  <div id="registrationForm">
+    <h2>User Registration</h2>
+    <label for="username">Username: </label>
+    <input type="text" id="username" placeholder="Enter your username">
+    <button onclick="registerUser()">Register</button>
+  </div>
+
+  <!-- Expense Entry Form -->
+  <div id="expenseEntryForm" style="display: none;">
+    <h2>Expense Entry</h2>
+    <label for="category">Category: </label>
+    <input type="text" id="category" placeholder="Enter expense category">
+    <label for="amount">Amount: </label>
+    <input type="number" id="amount" placeholder="Enter expense amount">
+    <button onclick="addExpense()">Add Expense</button>
+  </div>
+
+  <!-- Expense Listing -->
+  <div id="expenseList">
+    <h2>Expense Listing</h2>
+    <ul id="expenses"></ul>
+  </div>
+
+  <!-- Category-wise Summation -->
+  <div id="categorySummation">
+    <h2>Category-wise Summation</h2>
+    <ul id="categorySum"></ul>
+  </div>
+
+  <script>
+    // User Registration
+    let currentUser = null;
+
+    function registerUser() {
+      const username = document.getElementById('username').value;
+      if (username.trim() !== "") {
+        currentUser = username;
+        document.getElementById('registrationForm').style.display = 'none';
+        document.getElementById('expenseEntryForm').style.display = 'block';
+      } else {
+        alert('Please enter a valid username.');
+      }
+    }
+
+    // Expense Entry
+    let expenses = [];
+
+    function addExpense() {
+      const category = document.getElementById('category').value;
+      const amount = parseFloat(document.getElementById('amount').value);
+
+      if (category.trim() === "" || isNaN(amount) || amount <= 0) {
+        alert('Please enter valid data for expense.');
+        return;
+      }
+
+      expenses.push({ category, amount });
+      updateExpenseList();
+      updateCategorySum();
+    }
+
+    // Update Expense List
+    function updateExpenseList() {
+      const expensesList = document.getElementById('expenses');
+      expensesList.innerHTML = "";
+      expenses.forEach(expense => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${expense.category}: $${expense.amount.toFixed(2)}`;
+        expensesList.appendChild(listItem);
+      });
+    }
+
+    // Update Category-wise Summation
+    function updateCategorySum() {
+      const categorySum = document.getElementById('categorySum');
+      categorySum.innerHTML = "";
+
+      const categoryMap = {};
+
+      expenses.forEach(expense => {
+        if (!categoryMap[expense.category]) {
+          categoryMap[expense.category] = 0;
+        }
+        categoryMap[expense.category] += expense.amount;
+      });
+
+      for (const category in categoryMap) {
+        const listItem = document.createElement('li');
+        listItem.textContent = `${category}: $${categoryMap[category].toFixed(2)}`;
+        categorySum.appendChild(listItem);
+      }
+    }
+  </script>
+
+</body>
+</html> 
+
+
+
+
+
